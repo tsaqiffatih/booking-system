@@ -1,0 +1,56 @@
+// protoc --go_out=./booking --go-grpc_out=./booking booking/booking.proto
+syntax = "proto3";
+
+option go_package = "./bookingPb";
+
+package booking;
+
+service BookingService {
+  rpc CreateBooking (CreateBookingRequest) returns (BookingResponse);
+  
+  // Get a single booking by its ID
+  rpc GetBooking (GetBookingRequest) returns (BookingResponse);
+  // Get all bookings for a user
+  rpc GetBookings (GetBookingsRequest) returns (GetBookingsResponse);
+  rpc UpdateBookingStatus (UpdateBookingStatusRequest) returns (UpdateBookingStatusResponse);
+}
+
+message CreateBookingRequest {
+  string user_id = 1;
+  string hotel_id = 2;
+  string room_id = 3;
+  string check_in_date = 4;  // Format: YYYY-MM-DD
+  string check_out_date = 5; // Format: YYYY-MM-DD
+}
+
+message GetBookingRequest {
+  string booking_id = 1;
+}
+
+message BookingResponse {
+  string booking_id = 1;
+  string user_id = 2;
+  string hotel_id = 3;
+  string room_id = 4;
+  string check_in_date = 5;
+  string check_out_date = 6;
+  string status = 7; // e.g., "confirmed", "cancelled", "pending"
+}
+
+message GetBookingsRequest {
+  string user_id = 1;
+}
+
+message GetBookingsResponse {
+  repeated BookingResponse bookings = 1;
+}
+
+message UpdateBookingStatusRequest {
+  string booking_id = 1;
+  string status = 2;
+}
+
+message UpdateBookingStatusResponse {
+  string booking_id = 1;
+  string status = 2;
+}

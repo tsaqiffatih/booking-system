@@ -1,0 +1,97 @@
+syntax = "proto3";
+
+package bff;
+
+message LoginRequest {
+    string username = 1;
+    string password = 2;
+}
+
+message LoginResponse {
+    string token = 1;
+    string userId = 2;
+}
+
+message RegisterRequest {
+    string username = 1;
+    string email = 2;
+    string password = 3;
+}
+
+message RegisterResponse {
+    string userId = 1;
+}
+
+message GetHotelsRequest {
+    string location = 1;
+}
+
+message Hotel {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+    float rating = 4;
+}
+
+message GetHotelsResponse {
+    repeated Hotel hotels = 1;
+}
+
+message CreateBookingRequest {
+    string userId = 1;
+    string hotelId = 2;
+    string roomId = 3;
+    string checkInDate = 4;
+    string checkOutDate = 5;
+}
+
+message CreateBookingResponse {
+    string bookingId = 1;
+    string status = 2;
+}
+
+message GetBookingRequest {
+    string bookingId = 1;
+}
+
+message BookingDetail {
+    string bookingId = 1;
+    string userId = 2;
+    string hotelId = 3;
+    string roomId = 4;
+    string status = 5;
+}
+
+message GetBookingResponse {
+    BookingDetail bookingDetail = 1;
+}
+
+message ProcessPaymentRequest {
+    string userId = 1;
+    string bookingId = 2;
+    float amount = 3;
+}
+
+message ProcessPaymentResponse {
+    string paymentId = 1;
+    string status = 2;
+}
+
+message SendNotificationRequest {
+    string userId = 1; 
+    string message = 2; 
+}
+
+message SendNotificationResponse {
+    bool success = 1;
+}
+
+service BffService {
+    rpc Login(LoginRequest) returns (LoginResponse);
+    rpc Register(RegisterRequest) returns (RegisterResponse);
+    rpc GetHotels(GetHotelsRequest) returns (GetHotelsResponse);
+    rpc CreateBooking(CreateBookingRequest) returns (CreateBookingResponse);
+    rpc GetBooking(GetBookingRequest) returns (GetBookingResponse);
+    rpc ProcessPayment(ProcessPaymentRequest) returns (ProcessPaymentResponse);
+    rpc SendNotification(SendNotificationRequest) returns (SendNotificationResponse);
+}

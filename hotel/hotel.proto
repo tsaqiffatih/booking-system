@@ -1,0 +1,47 @@
+// protoc --go_out=./hotel --go-grpc_out=./hotel hotel/hotel.proto
+syntax = "proto3";
+
+option go_package = "./hotelPb";
+
+package hotel;
+
+service HotelService {
+  rpc ListHotels (ListHotelsRequest) returns (ListHotelsResponse);
+  rpc CheckRoomAvailability (CheckRoomRequest) returns (CheckRoomResponse);
+}
+
+message ListHotelsRequest {
+  string location = 1;
+  string check_in_date = 2;
+  string check_out_date = 3;
+}
+
+message ListHotelsResponse {
+  repeated Hotel hotels = 1;
+}
+
+message Hotel {
+  string hotel_id = 1;
+  string name = 2;
+  string location = 3;
+  repeated Room rooms = 4;
+}
+
+message Room {
+  string room_id = 1;
+  string type = 2;
+  float price = 3;
+  bool available = 4;
+}
+
+// di gunakan untuk service booking mengecek ketersediaan kamar
+message CheckRoomRequest {
+  string hotel_id = 1;
+  string room_id = 2;
+  string check_in_date = 3;
+  string check_out_date = 4;
+}
+
+message CheckRoomResponse {
+  bool available = 1;
+}

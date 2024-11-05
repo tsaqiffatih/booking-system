@@ -1,0 +1,47 @@
+// protoc --go_out=./payment --go-grpc_out=./payment payment/payment.proto
+syntax = "proto3";
+
+option go_package = "./paymentPb";
+
+package payment;
+
+service PaymentService {
+  rpc ProcessPayment (PaymentRequest) returns (PaymentResponse);
+  rpc CheckPaymentStatus (PaymentStatusRequest) returns (PaymentResponse);
+  rpc CancelPayment (PaymentStatusRequest) returns (PaymentResponse);
+  rpc HandlePaymentCallback (PaymentCallbackRequest) returns (PaymentResponse);
+}
+
+message PaymentRequest {
+  string booking_id = 1;
+  float amount = 2;
+  string user_id = 3;
+}
+
+message PaymentStatusRequest {
+  string payment_id = 1;
+}
+
+message PaymentCallbackRequest {
+  string payment_id = 1;
+  PaymentStatus status = 2;
+}
+
+message PaymentResponse {
+  string payment_id = 1;
+  string booking_id = 2;
+  string user_id = 3;
+  float amount = 4;
+  PaymentStatus status = 5;
+  string created_at = 6;
+  string updated_at = 7;
+  string expires_at = 8;
+}
+
+enum PaymentStatus {
+  PENDING = 0;
+  COMPLETED = 1;
+  FAILED = 2;
+  REFUNDED = 3;
+  CANCELLED = 4;
+}

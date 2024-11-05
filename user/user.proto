@@ -1,0 +1,49 @@
+// protoc --go_out=./user --go-grpc_out=./user user/user.proto
+syntax = "proto3";
+
+option go_package = "./userPb";
+
+package user;
+
+service UserService {
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+  rpc GetUser(GetUserRequest) returns (GetUserResponse);
+  rpc LoginUser(LoginUserRequest) returns (LoginUserResponse);
+}
+
+message User {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  string phoneNumber = 5;
+}
+
+message CreateUserRequest {
+  string fullName = 1;
+  string email = 2;
+  string password = 3;
+  string phoneNumber = 4;
+}
+
+message CreateUserResponse {
+  string id = 1;
+  string message = 2;
+}
+
+message GetUserRequest {
+  string id = 1;
+}
+
+message GetUserResponse {
+  User user = 1;
+}
+
+message LoginUserRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message LoginUserResponse {
+  string token = 1;
+  string message = 2;
+}
