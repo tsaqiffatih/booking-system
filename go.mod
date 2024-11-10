@@ -4,6 +4,7 @@ go 1.23.2
 
 require (
 	github.com/google/uuid v1.6.0
+	github.com/midtrans/midtrans-go v1.3.8
 	google.golang.org/grpc v1.67.1
 	google.golang.org/protobuf v1.35.1
 	gorm.io/gorm v1.25.12

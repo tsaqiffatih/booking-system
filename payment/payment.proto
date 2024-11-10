@@ -10,12 +10,14 @@ service PaymentService {
   rpc CheckPaymentStatus (PaymentStatusRequest) returns (PaymentResponse);
   rpc CancelPayment (PaymentStatusRequest) returns (PaymentResponse);
   rpc HandlePaymentCallback (PaymentCallbackRequest) returns (PaymentResponse);
+  rpc HandlePaymentNotification(PaymentNotificationRequest) returns (PaymentNotificationResponse);
 }
 
 message PaymentRequest {
   string booking_id = 1;
   float amount = 2;
   string user_id = 3;
+  string payment_type = 4;
 }
 
 message PaymentStatusRequest {
@@ -36,6 +38,28 @@ message PaymentResponse {
   string created_at = 6;
   string updated_at = 7;
   string expires_at = 8;
+  PaymentDetails details = 9;
+}
+
+message PaymentDetails {
+  string redirect_url = 1; // Untuk e-wallet
+  string virtual_account = 2; // Untuk Bank Transfer
+  string qr_code_url = 3; // Untuk QRIS
+}
+
+message PaymentNotificationRequest {
+  string order_id = 1;
+  string transaction_id = 2; 
+  string transaction_status = 3;
+  string payment_type = 4;
+  string fraud_status = 5;
+  float gross_amount = 6; 
+  string callback_time = 7;
+}
+
+message PaymentNotificationResponse {
+  bool success = 1;
+  string message = 2;
 }
 
 enum PaymentStatus {

@@ -32,9 +32,10 @@ booking_system/
 │   │   └── main.go   
 │   ├── payment_handler.go
 │   ├── payment_model.go
+│   ├── payment_scheduler.go
 │   ├── payment_repository.go
 │   ├── payment_service.go
-│   ├── payment_client.go
+│   ├── payment_client.go 
 │   ├── paymentPb/
 │   ├── payment.proto
 │   └── app.dockerfile

@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+// untuk merubah status dari payment saat user belum melakukan pembayaran.
 func StartPaymentExpiryScheduler(repo PaymentRepository) {
 	ticker := time.NewTicker(1 * time.Hour)
 	go func() {

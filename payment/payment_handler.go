@@ -2,8 +2,11 @@ package payment_service
 
 import (
 	"context"
+	"time"
 
 	"github.com/tsaqiffatih/booking-system/payment/paymentPb"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type paymentHandler struct {
@@ -16,20 +19,26 @@ func NewPaymentHandler(service PaymentService) paymentPb.PaymentServiceServer {
 }
 
 func (s *paymentHandler) ProcessPayment(ctx context.Context, req *paymentPb.PaymentRequest) (*paymentPb.PaymentResponse, error) {
-	payment, err := s.service.ProcessPayment(ctx, req.BookingId, req.UserId, float64(req.Amount))
+	paymentDetails, err := s.service.ProcessPayment(ctx, req.BookingId, req.UserId, req.PaymentType, float64(req.Amount))
 	if err != nil {
-		return nil, err
+		return nil, status.Errorf(codes.Internal, "failed to process payment: %v", err)
 	}
-	return &paymentPb.PaymentResponse{
-		PaymentId: payment.PaymentID.String(),
-		BookingId: payment.BookingID.String(),
-		UserId:    payment.UserID.String(),
-		Amount:    float32(payment.Amount),
-		Status:    paymentPb.PaymentStatus(paymentPb.PaymentStatus_value[string(payment.Status)]),
-		CreatedAt: payment.CreatedAt.String(),
-		UpdatedAt: payment.UpdatedAt.String(),
-		ExpiresAt: payment.ExpiresAt.String(),
-	}, nil
+
+	response := &paymentPb.PaymentResponse{
+		PaymentId: paymentDetails.PaymentID.String(),
+		BookingId: req.BookingId,
+		UserId:    req.UserId,
+		Amount:    req.Amount,
+		Status:    paymentPb.PaymentStatus_PENDING,
+		Details: &paymentPb.PaymentDetails{
+			RedirectUrl:    paymentDetails.RedirectURL,
+			VirtualAccount: paymentDetails.BankTransferInstructions.VirtualAccount,
+			QrCodeUrl:      paymentDetails.QRCodeURL,
+		},
+		ExpiresAt: paymentDetails.ExpiresAt.Format(time.RFC3339),
+	}
+
+	return response, nil
 }
 
 func (s *paymentHandler) CheckPaymentStatus(ctx context.Context, req *paymentPb.PaymentStatusRequest) (*paymentPb.PaymentResponse, error) {
